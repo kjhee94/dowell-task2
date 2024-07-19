@@ -1,0 +1,40 @@
+<header>
+	<div class="box-side">
+		<div id="logo">
+			<a href="/">
+				<img class="img-full" alt="로고이미지" src="/images/logo.png">
+			</a>
+		</div>
+		<nav>
+			<ul id="gnb">
+				<li>
+					<div class="gnb-list">
+						ㆍ 상품
+						<span class="material-icons icon-arrow">navigate_next</span>
+					</div>
+					<ul class="lnb">
+						<li><a href="/product">ㆍ 상품 조회</a></li>
+					</ul>
+				</li>
+				<li>
+					<div class="gnb-list">
+						ㆍ 재고
+						<span class="material-icons icon-arrow">navigate_next</span>
+					</div>
+					<ul class="lnb">
+						<li><a href="/stock">ㆍ 매장별 재고조회</a></li>
+						<li><a href="/stock/stockUpdAll">ㆍ 매장별 재고조정</a></li>
+						<li><a href="/stock/stockHtAll">ㆍ 매장별 재고조정이력</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--<div class="box-top">
+		<div class="box-user">
+			<span th:text="${session.prtNm}"></span>
+			<span th:text="${session.userNm} + ' 님'"></span>
+			<a href="#">로그아웃</a>
+		</div>
+	</div>-->
+</header>

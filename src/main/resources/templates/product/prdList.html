@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>상품 조회</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<link th:href="@{common/common.css}" rel="stylesheet" />
+	<link th:href="@{common/include.css}" rel="stylesheet" />
+	<link th:href="@{css/product/prdList.css}" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script type="text/javascript" th:src="@{common/common.js}"></script>
+	<script type="text/javascript" th:src="@{common/gnb.js}"></script>
+	<script type="text/javascript" th:src="@{js/product/prdList.js}"></script>
+</head>
+<body>
+	<div id="wrap">
+		<!-- header -->
+		<th:block th:replace="~{/include/header}"></th:block>
+		
+		<!-- content -->
+		<div id="content">
+			<div class="container">
+				<div class="box-title">
+					<span class="main-title">상품 조회</span>
+				</div>
+					
+				<div class="box-search">
+					<form id="SearchPrdForm">
+						<div class="area-input">
+							<div class="one-search">
+								<span class="search-title">상품명</span>
+								<div class="box-input-text">
+									<input id="prdNm" class="style-input" type="text" name="prdNm" autocomplete='off'>
+								</div>
+							</div>
+							<div class="one-search">
+								<span class="search-title">상품코드</span>
+								<div class="box-input-text">
+									<input id="prdCd" class="style-input" type="text" name="prdCd" autocomplete='off'>
+								</div>
+							</div>
+						</div>
+						
+						<div class="area-btn">
+							<button id="SearchBtn" class="btn-submit" type="submit">
+								<span class="material-icons">search</span>
+							</button>
+						</div>
+					</form>
+				</div>
+				<div class="box-button">
+					<button id="prdAddBtn" class="btn-add" type="button">상품 등록</button>
+					<button id="prdDelBtn" class="btn-add" type="button">상품 제거</button>
+				</div>
+				
+				<div class="box-result">
+					<div class="result-title">
+						<span class="checkbox">선택</span>
+						<span class="prdCd">상품코드</span>
+						<span class="prdNm">상품명</span>
+						<span class="prdTpNm">상품유형</span>
+						<span class="prdSsNm">상품상태</span>
+						<span class="prdCsmrUpr">소비자가</span>
+						<span class="prdPchUpr">매입단가</span>
+						<span class="taxCsNm">세금분류</span>
+						<span class="prdImg">상품 이미지</span>
+					</div>
+					<div id="fieldListBody" class="result-content">
+						<p>해당하는 상품이 없습니다.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+</body>
+</html>

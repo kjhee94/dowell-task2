@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dowell.bo.stock.mapper.StockMapper">
+	<select id="getStockList" resultType="com.dowell.bo.stock.model.Stock">
+		/*stock.getStockList 매장별 재고 조회*/
+		SELECT 
+			ivm.PRT_CD AS prtCd
+			,ptm.PRT_NM AS prtNm
+			,ivm.PRD_CD AS prdCd
+			,pdm.PRD_NM AS prdNm
+			,IVCO_QTY AS ivcoQty
+		FROM SD_IVCO01_MT ivm, MA_PRT_MT ptm, MA_PRD01_MT pdm
+		WHERE ivm.PRT_CD = ptm.PRT_CD 
+		AND ivm.PRD_CD = pdm.PRD_CD
+		AND IVCO_QTY <![CDATA[<>]]> 0
+		ORDER BY ivm.PRT_CD, ivm.PRD_CD
+	</select>
+	
+	<select id="searchPrt" resultType="com.dowell.bo.stock.model.Prt">
+		/*stock.searchPrt 매장 찾기*/
+		SELECT 
+			PRT_CD AS prtCd
+			,PRT_NM AS prtNm
+			,PRT_DT_CD AS prtDtCd
+			,(SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'PRT_DT_CD' AND DTL_CD = PRT_DT_CD) AS prtDtNm
+			,PRT_SS_CD AS prtSsCd
+			,(SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'PRT_SS_CD' AND DTL_CD = PRT_SS_CD) AS prtSsNm
+		FROM MA_PRT_MT
+		WHERE 1=1
+		AND (PRT_CD LIKE '%'||#{query}||'%' OR PRT_NM LIKE'%'|| #{query}||'%')
+		ORDER BY PRT_CD
+	</select>
+	
+	<select id="searchStock" resultType="com.dowell.bo.stock.model.Stock">
+		/*stock.searchStock 매장별 재고 검색*/
+		SELECT 
+			ivm.PRT_CD AS prtCd
+			,ptm.PRT_NM AS prtNm
+			,ivm.PRD_CD AS prdCd
+			,pdm.PRD_NM AS prdNm
+			,IVCO_QTY AS ivcoQty
+		FROM SD_IVCO01_MT ivm, MA_PRT_MT ptm, MA_PRD01_MT pdm
+		WHERE ivm.PRT_CD = ptm.PRT_CD 
+		AND ivm.PRD_CD = pdm.PRD_CD
+		AND IVCO_QTY <![CDATA[<>]]> 0
+		<if test="prtCd != null">
+			AND ivm.PRT_CD LIKE '%'||#{prtCd}||'%'
+		</if>
+		<if test="prdNm != null">
+			AND pdm.PRD_NM LIKE '%'||#{prdNm}||'%'
+		</if>
+		<if test="prdCd != null">
+			AND ivm.PRD_CD LIKE '%'||#{prdCd}||'%'
+		</if>
+		ORDER BY ivm.PRT_CD, ivm.PRD_CD
+	</select>
+	
+	<select id="getStockPrdList" resultType="com.dowell.bo.stock.model.Stock">
+		/*stock.getStockPrdList 매장별 재고조정 리스트*/
+		SELECT 
+			pdm.PRD_CD AS prdCd
+			,pdm.PRD_NM AS prdNm
+			,CASE 
+				WHEN ivm.IVCO_QTY IS NULL THEN 0
+				ELSE ivm.IVCO_QTY
+			END AS chgBfIvcoQty
+		FROM MA_PRD01_MT pdm
+			,(SELECT * FROM SD_IVCO01_MT WHERE PRT_CD = #{prtCd}) ivm
+		WHERE pdm.PRD_CD = ivm.PRD_CD(+)
+		AND pdm.PRD_CD = #{prdCd}
+		ORDER BY pdm.PRD_CD 
+	</select>
+	
+	<select id="getOption" resultType="com.dowell.bo.stock.model.Stock">
+		/*stock.getOption 조정사유 옵션*/
+		SELECT 
+			DTL_CD AS chgRsnCd
+			,DTL_CD_NM AS chgRsnNm
+		FROM MA_CODE_DT
+		WHERE CODE_CD = 'CHG_RSN_CD'
+	</select>
+	
+	<select id="searchStockPrdList" resultType="com.dowell.bo.stock.model.Stock">
+		/*stock.searchStockPrdList 매장별 재고조정 리스트 검색*/
+		SELECT 
+			pdm.PRD_CD AS prdCd
+			,pdm.PRD_NM AS prdNm
+			,CASE 
+				WHEN ivm.IVCO_QTY IS NULL THEN 0
+				ELSE ivm.IVCO_QTY
+			END AS chgBfIvcoQty
+		FROM MA_PRD01_MT pdm
+			,(SELECT * FROM SD_IVCO01_MT WHERE PRT_CD = #{prtCd}) ivm
+		WHERE pdm.PRD_CD = ivm.PRD_CD(+)
+		<if test="prdNm != null">
+			AND pdm.PRD_NM LIKE '%'||#{prdNm}||'%'
+		</if>
+		<if test="prdCd != null">
+			AND pdm.PRD_CD LIKE '%'||#{prdCd}||'%'
+		</if>
+		ORDER BY pdm.PRD_CD 
+	</select>
+	
+    <insert id="insertStockHt">
+		/*stock.insertStockHt 재고조정 이력 인입*/
+		<foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+			INSERT INTO PRD_CHG_HT (
+				PRT_CD
+				,CHG_DT
+				,PRD_CD
+				,SEQ
+				,CHG_BF_IVCO_QTY
+				,CHG_QTY
+				,CHG_AF_IVCO_QTY
+				,CHG_RSN_CD
+				,CHG_RSN_NM
+				,FST_REG_DT
+				,FST_USER_ID
+				,LST_UPD_DT
+				,LST_UPD_ID
+			)
+			VALUES (
+				#{item.prtCd}
+				,TO_CHAR(SYSDATE,'YYYYMMDD')
+				,#{item.prdCd}
+				,(SELECT NVL(MAX(SEQ),0)+1 FROM PRD_CHG_HT WHERE PRT_CD = #{item.prtCd} AND PRD_CD = #{item.prdCd})
+				,#{item.chgBfIvcoQty}
+				,#{item.chgQty}
+				,#{item.chgAfIvcoQty}
+				,#{item.chgRsnCd}
+				,#{item.chgRsnDt}
+				,SYSDATE 
+				,'kjhee'
+				,SYSDATE 
+				,'kjhee'
+			)
+		</foreach>
+   </insert>
+   
+	
+	<update id="updateStock">
+		/*stock.updateStock 재고 수정*/
+		<foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+			MERGE INTO SD_IVCO01_MT
+			USING dual
+				ON (PRT_CD = #{item.prtCd} AND PRD_CD = #{item.prdCd})
+			WHEN MATCHED THEN
+				UPDATE SET 
+					IVCO_QTY = #{item.chgAfIvcoQty}
+					,LST_UPD_DT = SYSDATE
+					,LST_UPD_ID = 'kjhee'
+			WHEN NOT MATCHED THEN
+				INSERT (
+					PRT_CD
+					,PRD_CD
+					,IVCO_QTY
+					,FST_REG_DT
+					,FST_USER_ID
+					,LST_UPD_DT
+					,LST_UPD_ID
+				)
+				VALUES (
+					#{item.prtCd}
+					,#{item.prdCd}
+					,#{item.chgAfIvcoQty}
+					,SYSDATE
+					,'kjhee'
+					,SYSDATE
+					,'kjhee'
+				)
+		</foreach>
+   </update>
+   
+   <select id="getStockHtList" resultType="com.dowell.bo.stock.model.Stock">
+	/*stock.getStockHtList 매장별 재고조정이력 리스트*/
+		SELECT
+			CHG_DT AS chgDt
+			,ch.PRD_CD AS prdCd
+			,PRD_NM AS prdNm
+			,CHG_BF_IVCO_QTY AS chgBfIvcoQty
+			,CHG_AF_IVCO_QTY AS chgAfIvcoQty
+			,CHG_QTY AS chgQty
+			,CHG_RSN_CD AS chgRsnCd
+			,(SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'CHG_RSN_CD' AND DTL_CD = CHG_RSN_CD) AS chgRsnNm
+			,CASE 
+				WHEN CHG_RSN_NM IS NULL THEN ' '
+				ELSE CHG_RSN_NM	
+			END chgRsnDt
+		FROM PRD_CHG_HT ch, MA_PRD01_MT pm
+		WHERE ch.PRD_CD = pm.PRD_CD(+)
+		AND PRT_CD = #{query} 
+		ORDER BY ch.FST_REG_DT DESC, ch.PRD_CD 
+   </select>
+   
+   <select id="searchStockHtList" resultType="com.dowell.bo.stock.model.Stock">
+	/*stock.searchStockHtList 매장별 재고조정이력 검색*/
+		SELECT
+			CHG_DT AS chgDt
+			,ch.PRD_CD AS prdCd
+			,PRD_NM AS prdNm
+			,CHG_BF_IVCO_QTY AS chgBfIvcoQty
+			,CHG_AF_IVCO_QTY AS chgAfIvcoQty
+			,CHG_QTY AS chgQty
+			,CHG_RSN_CD AS chgRsnCd
+			,(SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'CHG_RSN_CD' AND DTL_CD = CHG_RSN_CD) AS chgRsnNm
+			,CASE 
+				WHEN CHG_RSN_NM IS NULL THEN ' '
+				ELSE CHG_RSN_NM
+			END chgRsnDt
+		FROM PRD_CHG_HT ch, MA_PRD01_MT pm
+		WHERE ch.PRD_CD = pm.PRD_CD(+)
+		AND PRT_CD = #{prtCd} 
+		<if test="prdNm != null">
+			AND pm.PRD_NM LIKE '%'||#{prdNm}||'%'
+		</if>
+		<if test="prdCd != null">
+			AND pm.PRD_CD LIKE '%'||#{prdCd}||'%'
+		</if>
+		ORDER BY ch.FST_REG_DT DESC, ch.PRD_CD 
+   </select>
+</mapper>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>상품 정보 수정</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<link th:href="@{/common/common.css}" rel="stylesheet" />
+	<link th:href="@{/css/product/prdUpdPop.css}" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script type="text/javascript" th:src="@{/common/common.js}"></script>
+	<script type="text/javascript" th:src="@{/js/product/prdUpdPop.js}"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="box-title">
+			<span class="main-title">상품 정보 수정</span>
+		</div>
+		
+		<form id="prdUpdForm" method="post">
+			<fieldset>
+				<div class="one-input">
+					<span class="input-title"><span class="required">*</span>상품명</span>
+					<div class="box-input">
+						<input id="prdNm" class="style-input" type="text" name="prdNm" autofocus autocomplete='off'>
+					</div>
+				</div>
+				<div class="one-input">
+					<span class="input-title">상품코드</span>
+					<div class="box-input">
+						<input id="prdCd" class="style-input" type="text" name="prdCd" readonly autocomplete='off'>
+					</div>
+				</div>
+				<div class="one-input">
+					<span class="input-title"><span class="required">*</span>소비자단가</span>
+					<div class="box-input">
+						<input id="prdCsmrUpr" class="style-input" type="text" name="prdCsmrUpr" autocomplete='off'>
+					</div>
+				</div>
+				<div class="one-input">
+					<span class="input-title"><span class="required">*</span>매입단가</span>
+					<div class="box-input">
+						<input id="prdPchUpr" class="style-input" type="text" name="prdPchUpr" autocomplete='off'>
+					</div>
+				</div>
+				<div class="one-input">
+					<span class="input-title"><span class="required">*</span>상품유형</span>
+					<div class="box-radio">
+						<label><input type="radio" name="prdTpCd" value="10" checked>본품</label>
+						<label><input type="radio" name="prdTpCd" value="20">견본품</label>
+					</div>
+				</div>
+				<div class="one-input">
+					<span class="input-title"><span class="required">*</span>세금분류</span>
+					<div class="box-radio">
+						<label><input type="radio" name="taxCsCd" value="30" checked>과세</label>
+						<label><input type="radio" name="taxCsCd" value="31">비과세</label>
+					</div>
+				</div>
+				<div class="one-input">
+					<span class="input-title"><span class="required">*</span>상품상태</span>
+					<div class="box-radio">
+						<label><input type="radio" name="prdSsCd" value="R" checked>판매</label>
+						<label><input type="radio" name="prdSsCd" value="C">해지</label>
+					</div>
+				</div>
+				<div class="one-input">
+					<span class="input-title">이미지</span>
+					<div class="box-upload">
+						<input type="file" name="prdImg"/>
+						<button class="btn-delfile" type="button" onclick="delFile()">삭제</button>
+						<span id="prdImg"></span>
+					</div>
+				</div>
+			</fieldset>
+			<div class="box-btn">
+				<button id="updateBtn" class="btn-apply" type="submit">수정</button>
+				<button id="closeBtn" class="btn-close" type="button">닫기</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

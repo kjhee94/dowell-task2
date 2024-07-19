@@ -1,0 +1,174 @@
+@charset "UTF-8";
+
+/*기본 설정*/
+*{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background-color: transparent;
+	text-decoration: none;
+	list-style-type: none;
+	box-sizing: border-box;
+	font-size: 16px;
+	font-family: 'Noto Sans KR', sans-serif;
+	color: #707070;
+	letter-spacing: -0.3px;
+	border-collapse : collapse;
+}
+
+/*페이지세로 가변적인 길이 유지*/
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+	background-color: #eee;
+}
+#wrap {
+	min-height: 100vh;
+	position: relative
+}
+
+/*contect 기본설정*/
+#content {
+	width: 85%;
+	padding: 30px;
+	float: right;
+}
+/*container 기본설정*/
+.container {
+	width: 100%;
+	padding: 30px;
+	/* 기본적으로 꽉차는 container 설정 */
+	min-height: calc(100vh - 60px);
+	background-color: #fff;
+}
+
+/*이미지 꽉차게*/
+.img-full {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/*input 태그 디자인*/
+.style-input {
+	height: 30px;
+	border: 0.5px solid #C8C8C8;
+	padding: 0 15px;
+	font-size: 14px;
+}
+input::placeholder,
+textarea::placeholder {
+  	color: #C8C8C8;
+}
+input:focus,
+select:focus,
+textarea:focus
+ {
+	outline: none;
+}
+textarea {
+	white-space: pre-wrap;
+	border: 0.5px solid #C8C8C8;
+}
+input[readonly] {
+	background-color: #d9d9d9;
+}
+textarea[readonly] {
+	background-color: #d9d9d9;
+}
+
+/*input checkbox 디자인*/
+input[type="checkbox"]{
+	width: 14px;
+	height: 14px;
+}
+
+/*input radio 디자인*/
+input[type="radio"]{
+	width: 14px;
+	height: 14px;
+	padding-top: 2px;
+}
+
+
+/*input date 디자인*/
+input[type="date"] {
+	height: 30px;
+	padding: 0 15px;
+	font-size: 14px;
+	border: 1px #c8c8c8 solid;
+}
+
+/*select 디자인*/
+select {
+   -webkit-appearance:none; /* for chrome */
+   -moz-appearance:none; /*for firefox*/
+   appearance:none;
+}
+select::-ms-expand{
+   display:none;/*for IE10,11*/
+}
+option[disabled]{
+	background-color: #c8c8c8;
+	color: #fff;
+}
+select[disabled]{
+	background-color: #d9d9d9;
+	opacity: 1;
+}
+
+/*상단 타이틀 영역 공통*/
+.box-title {
+	height: 20px;
+	display: flex;
+	align-items: center;
+	position: relative;
+	margin-bottom: 25px;
+}
+.main-title {
+	font-size: 18px;
+	font-weight: 700;
+	padding-right: 5px;
+}
+
+/*초기화 버튼*/
+.btn-reset {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+.btn-reset>span {
+	font-size: 22px;
+	padding-top: 3px;
+}
+
+/*필수입력 표시*/
+.required {
+	padding-right: 5px;
+	color: #C22B12;
+	position: absolute;
+	top: 4px;
+}
+
+/*팝업 닫기,적용 버튼 */
+.box-btn {
+	text-align: right;
+}
+.box-btn>button {
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-left : 10px;
+}
+.btn-close {
+	border: 1px #c8c8c8 solid;
+}
+.btn-apply {
+	background-color: #114574;
+	color: #fff;
+}

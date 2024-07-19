@@ -1,0 +1,124 @@
+@charset "UTF-8";
+
+/*header*/
+header {
+	width: 100%;
+}
+
+/*side 영역*/
+.box-side {
+	width: 15%;
+	height: 100vh;
+	background-color: #fff;
+	position: fixed;
+}
+#logo {
+	width: 100%;
+	padding: 15%;
+}
+
+/*네비게이션*/
+nav {
+	margin-top: 10px;
+}
+#gnb>li {
+	cursor: pointer;
+}
+.gnb-list {
+	height: 50px;
+	padding: 0 30px;
+	font-size: 16px;
+	
+	/*아이콘 정렬*/
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+.lnb {
+	display: none;
+}
+.lnb>li {
+	display: block;
+	height: 50px;
+	line-height: 50px;
+	background-color: #2261AE;
+}
+.lnb>li>a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	padding: 0 30px;
+	color: rgb(233, 236, 239);
+	font-size: 15px;
+}
+
+/*아이콘 설정*/
+.gnb-list>span {
+	font-size: 16px;
+}
+.icon-main {
+	padding-right: 5px;
+}
+.icon-arrow {
+	position: absolute;
+	right: 30px;
+	transition: all 0.2s;
+}
+
+/*hover 설정*/
+.gnb-list:hover {
+	color: #2261AE;
+}
+.gnb-list:hover .material-icons {
+	color: #2261AE;
+}
+.lnb>li:hover {
+	background-color: rgb(23, 68, 123);
+}
+.lnb>li:hover>a {
+	color: #fff;
+}
+
+/*top 영역*/
+.box-top {
+	width: 85%;
+	height: 80px;
+	background-color: #fff;
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 999;
+}
+.box-user {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding-right: 40px;
+}
+.box-user>span {
+	padding-right: 15px;
+	vertical-align: text-bottom;
+}
+.box-user>span:after {
+	content: "";
+	display: inline-block;
+	width: 0.5px;
+	height: 15px;
+	background-color: #C8C8C8;
+	margin-left: 15px;
+}
+
+/*footer*/
+footer {
+	width: 85%;
+	height: 60px;
+	background-color: #fff;
+	display: flex;
+	align-items: center;
+	margin-left: 15%;
+}
+footer>p {
+	padding-left: 30px;
+	font-size: 12px;
+}

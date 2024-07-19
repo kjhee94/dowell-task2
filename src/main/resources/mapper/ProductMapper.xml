@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dowell.bo.product.mapper.ProductMapper">
+	<select id="getProduct" resultType="com.dowell.bo.product.model.Product">
+		/*product.getProduct 모든 상품 조회*/
+	    SELECT 	
+			pm.PRD_CD AS prdCd
+			, PRD_NM AS prdNm
+			, PRD_TP_CD AS prdTpCd
+			, PRD_SS_CD AS prdSsCd
+			, PRD_CSMR_UPR AS prdCsmrUpr
+			, PRD_PCH_UPR AS prdPchUpr
+			, TAX_CS_CD AS taxCsCd
+			, (SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'PRD_TP_CD' AND DTL_CD = PRD_TP_CD) AS prdTpNm
+			, (SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'PRD_SS_CD' AND DTL_CD = PRD_SS_CD) AS prdSsNm
+			, (SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'TAX_CS_CD' AND DTL_CD = TAX_CS_CD) AS taxCsNm
+			, CASE 
+				WHEN pim.PRD_IMG_NM IS NULL THEN ' '
+				ELSE pim.PRD_IMG_NM||'.'||pim.PRD_IMG_EXT
+			END AS prdImgNm
+		FROM MA_PRD01_MT pm, (SELECT * FROM PRD_IMG_MT WHERE USE_YN = 'Y') pim
+		WHERE pm.PRD_CD = pim.PRD_CD(+)
+		AND pm.USE_YN = 'Y'
+		ORDER BY pm.PRD_CD DESC
+   </select>
+   
+   <select id="searchPrd" resultType="com.dowell.bo.product.model.Product">
+		/*product.searchPrd 특정 상품 검색*/
+		SELECT 	
+			pm.PRD_CD AS prdCd
+			, PRD_NM AS prdNm
+			, PRD_TP_CD AS prdTpCd
+			, PRD_SS_CD AS prdSsCd
+			, PRD_CSMR_UPR AS prdCsmrUpr
+			, PRD_PCH_UPR AS prdPchUpr
+			, TAX_CS_CD AS taxCsCd
+			, (SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'PRD_TP_CD' AND DTL_CD = PRD_TP_CD) AS prdTpNm
+			, (SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'PRD_SS_CD' AND DTL_CD = PRD_SS_CD) AS prdSsNm
+			, (SELECT DTL_CD_NM FROM MA_CODE_DT WHERE CODE_CD = 'TAX_CS_CD' AND DTL_CD = TAX_CS_CD) AS taxCsNm
+			, CASE 
+				WHEN pim.PRD_IMG_NM IS NULL THEN ' '
+				ELSE pim.PRD_IMG_NM||'.'||pim.PRD_IMG_EXT
+			END AS prdImgNm
+		FROM MA_PRD01_MT pm, (SELECT * FROM PRD_IMG_MT WHERE USE_YN = 'Y') pim
+		WHERE pm.PRD_CD = pim.PRD_CD(+)
+		AND pm.USE_YN = 'Y'
+		<if test="prdNm != null">
+			AND PRD_NM LIKE '%'||#{prdNm}||'%'
+		</if>
+		<if test="prdCd != null">
+			AND pm.PRD_CD LIKE '%'||#{prdCd}||'%'
+		</if>
+		ORDER BY pm.PRD_CD DESC
+   </select>
+   
+   <select id="getPrdCd" resultType="string">
+		/*product.getPrdCd 제품코드 생성*/
+		SELECT MAX(PRD_CD) + 1 FROM MA_PRD01_MT
+   </select>
+   
+   <insert id="uploadImage">
+		/*product.uploadImage 이미지 등록*/
+		INSERT INTO PRD_IMG_MT (
+			PRD_CD
+			,PRD_IMG_ID
+			,PRD_IMG_ADDR
+			,PRD_IMG_NM
+			,PRD_IMG_SIZE
+			,PRD_IMG_EXT
+			,USE_YN
+			,FST_REG_DT
+			,FST_USER_ID
+			,LST_UPD_DT
+			,LST_UPD_ID
+		)
+		VALUES (
+			#{prdCd}
+			,#{prdImgId}
+			,#{prdImgAddr}
+			,#{prdImgNm}
+			,#{prdImgSize}
+			,#{prdImgExt}
+			,'Y'
+			,SYSDATE
+			,'kjhee'
+			,SYSDATE
+			,'kjhee'
+		)
+   </insert>
+   
+   <insert id="createProduct">
+		/*product.createProduct 제품 등록*/
+		INSERT INTO MA_PRD01_MT (
+			PRD_CD
+			,PRD_NM
+			,PRD_TP_CD
+			,PRD_CSMR_UPR
+			,PRD_PCH_UPR
+			,TAX_CS_CD
+			,PRD_SS_CD
+			,FST_REG_DT
+			,FST_USER_ID
+			,LST_UPD_DT
+			,LST_UPD_ID
+			,USE_YN
+		)
+		VALUES (
+			#{prdCd}
+			, #{prdNm}
+			, #{prdTpCd} 
+			, #{prdCsmrUpr}
+			, #{prdPchUpr} 
+			, #{taxCsCd}
+			, #{prdSsCd}
+			, sysdate
+			, 'kjhee'
+			, sysdate
+			, 'kjhee'
+			, 'Y'
+		)
+   </insert>
+   
+   <update id="updateImgYn">
+		/*product.updateImgYn 이미지 초기화(USE_YN 업데이트)*/
+		UPDATE PRD_IMG_MT
+		SET USE_YN = 'N'
+		WHERE PRD_CD = #{prdCd}
+   </update>
+   
+   <update id="updatePrd">
+		/*product.updatePrd 제품 수정*/
+		UPDATE MA_PRD01_MT
+		SET PRD_NM = #{prdNm}
+			,PRD_TP_CD = #{prdTpCd}
+			,PRD_CSMR_UPR = #{prdCsmrUpr}
+			,PRD_PCH_UPR = #{prdPchUpr}
+			,TAX_CS_CD = #{taxCsCd}
+			,PRD_SS_CD = #{prdSsCd}
+			,LST_UPD_DT = SYSDATE 
+			,LST_UPD_ID = 'kjhee'
+		WHERE PRD_CD = #{prdCd}
+   </update>
+   
+   <update id="deletePrd">
+		/*product.deletePrd 제품 삭제(USE_YN 업데이트)*/
+		UPDATE MA_PRD01_MT
+		SET USE_YN = 'N'
+		WHERE PRD_CD IN
+		<foreach collection="array" item="prdCdList" index="index" open="(" separator="," close=")">
+	    	#{prdCdList}
+		</foreach>
+   </update>
+</mapper>

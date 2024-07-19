@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>매장별 재고조회</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<link th:href="@{/common/common.css}" rel="stylesheet" />
+	<link th:href="@{/common/include.css}" rel="stylesheet" />
+	<link th:href="@{/css/stock/stockUpd.css}" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script type="text/javascript" th:src="@{/common/common.js}"></script>
+	<script type="text/javascript" th:src="@{/common/gnb.js}"></script>
+	<script th:inline="javascript">
+        /*<![CDATA[*/
+        var options = /*[[${options}]]*/ [];
+        /*]]>*/
+    </script>
+	<script type="text/javascript" th:src="@{/js/stock/stockUpd.js}"></script>
+</head>
+<body>
+	<div id="wrap">
+		<!-- header -->
+		<th:block th:replace="~{/include/header}"></th:block>
+		
+		<!-- content -->
+		<div id="content">
+			<div class="container">
+				<div class="box-title">
+					<span class="main-title">매장별 재고조정</span>
+				</div>
+					
+				<div class="box-search">
+					<form id="SearchStockForm">
+						<div class="area-input">
+							<div class="one-search">
+								<span class="search-title">매장코드<span class="required">*</span></span>
+								<div class="box-input-text">
+									<input id="prtCd" class="style-input" type="text" name="prtCd" th:value="${prtCd}" readonly autocomplete='off'>
+									<button id="prtSearchBtn" class="btn-one-search" type="button">
+										<span class="material-icons">search</span>
+									</button>
+									<input id="prtNm" class="style-input" type="text" name="prtNm" th:value="${prtNm}" readonly autocomplete='off'>
+								</div>
+							</div>
+							<div class="one-search">
+								<span class="search-title">상품명</span>
+								<div class="box-input-text">
+									<input id="prdNm" class="style-input" type="text" name="prdNm" th:value="${prdNm}" autocomplete='off'>
+								</div>
+							</div>
+							<div class="one-search">
+								<span class="search-title">상품코드</span>
+								<div class="box-input-text">
+									<input id="prdCd" class="style-input" type="text" name="prdCd" th:value="${prdCd}" autocomplete='off'>
+								</div>
+							</div>
+						</div>
+						
+						<div class="area-btn">
+							<button id="SearchBtn" class="btn-submit" type="submit">
+								<span class="material-icons">search</span>
+							</button>
+						</div>
+					</form>
+				</div>
+				<div class="box-button">
+					<button id="stockHtBtn" class="btn-add" type="button" onclick="stockHtPop()">이력</button>
+					<button id="stockSaveBtn" class="btn-add" type="button">저장</button>
+				</div>
+				
+				<div class="box-result">
+					<div class="result-title">
+						<span class="checkbox">선택</span>
+						<span class="prdCd">상품코드</span>
+						<span class="prdNm">상품명</span>
+						<span class="chgBfIvcoQty">조정전</span>
+						<span class="chgAfIvcoQty">조정후</span>
+						<span class="chgQty">차이수량</span>
+						<span class="chgRsnCd">조정사유</span>
+						<span class="chgRsnDt">기타조정사유</span>
+					</div>
+					<div id="fieldListBody" class="result-content">
+						<p>검색결과가 없습니다.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+</body>
+</html>
